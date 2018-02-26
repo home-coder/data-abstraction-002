@@ -55,12 +55,36 @@ static void table_init(table_data **tdata, unsigned int size)
 
 static void table_insert(table_data *tdata, unsigned int loc, int data)
 {
+	int i;
 	table_data *tdata_p = tdata;
+
 	if (!tdata_p) {
 		printf("tdata is not exsit\n");
 		return ;
 	}
 
+	if (loc < 0 || loc > tdata_p->lenght + 1) {
+		//invalid
+		printf("insert loc %u is invalid\n", loc);
+		return ;
+	}
+
+	if (tdata_p->lenght == tdata_p->size) {
+		//realloc
+		printf("memory is low, realloc\n");
+		tdata_p->data = (int *)realloc(tdata_p->data, 8 * sizeof(int));
+		if (!tdata_p->data) {
+			printf("tdata_p->data realloc failed\n");
+			return ;
+		}
+	}
+
+	for (i = tdata_p->lenght; i > loc; i--) {
+		tdata_p->data[i] = tdata_p->data[i-1];
+	}
+
+	tdata_p->data[loc] = data;
+	tdata_p->lenght++;
 }
 
 int main()
@@ -76,6 +100,7 @@ int main()
 	table_insert(tdata, 1, 3);
 	table_insert(tdata, 0, 1);
 	table_insert(tdata, 4, 2);
+	table_show(tdata);
 
 #if 0
 	table_amend(tdata, 1, 7);
