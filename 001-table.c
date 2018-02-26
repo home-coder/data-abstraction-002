@@ -121,6 +121,39 @@ static void table_delet(table_data *tdata, unsigned int loc)
 	tdata_p->lenght--;
 }
 
+static int table_select_data(table_data *tdata, unsigned int loc)
+{
+	table_data *tdata_p = tdata;
+	if (!tdata_p) {
+		printf("tdata is not exsit\n");
+		return ;
+	}
+
+	if (loc < 0 || loc > tdata_p->lenght - 1) {
+		printf("select loc %u is invalid\n", loc);
+		return 0xffff;
+	}
+
+	return tdata_p->data[loc];
+}
+
+static unsigned int table_select_loc(table_data *tdata, int data)
+{
+	int i;
+	table_data *tdata_p = tdata;
+	if (!tdata_p) {
+		printf("tdata is not exsit\n");
+		return ;
+	}
+
+	for (i = 0; i < tdata_p->lenght; i++) {
+		if (data == tdata_p->data[i]) {
+			return i;
+		}
+	}
+	return -1;
+}
+
 int main()
 {
 	table_data *tdata;
@@ -146,10 +179,12 @@ int main()
 	table_delet(tdata, 0);
 	table_show(tdata);
 
-#if 0
-	unsigned int loc = table_select(tdata, 7);
-	printf("loc is %d\n", loc);
+#if 1
+	unsigned int loc = table_select_loc(tdata, 9);
+	printf("data=9, loc is %d\n", loc);
 
+	int data = table_select_data(tdata, 1);
+	printf("loc=1, data is %d\n", data);
 #endif
 	table_show(tdata);
 exit:
