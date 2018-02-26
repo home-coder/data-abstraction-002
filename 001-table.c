@@ -87,6 +87,40 @@ static void table_insert(table_data *tdata, unsigned int loc, int data)
 	tdata_p->lenght++;
 }
 
+static void table_amend(table_data *tdata, unsigned int loc, int data)
+{
+	table_data *tdata_p = tdata;
+	if (!tdata_p) {
+		printf("tdata is not exsit\n");
+		return ;
+	}
+
+	if (loc < 0 || loc > tdata_p->lenght) {
+		printf("amend loc %u is invalid\n", loc);
+		return ;
+	}
+	tdata_p->data[loc] = data;
+}
+
+static void table_delet(table_data *tdata, unsigned int loc)
+{
+	int i;
+	table_data *tdata_p = tdata;
+	if (!tdata_p) {
+		printf("tdata is not exsit\n");
+		return ;
+	}
+
+	if (loc < 0 || loc > tdata_p->lenght - 1) {
+		printf("delete loc %u is invalid\n", loc);
+		return ;
+	}
+	for (i = loc; i < tdata_p->lenght; i++) {
+		tdata_p->data[i] = tdata_p->data[i+1];
+	}
+	tdata_p->lenght--;
+}
+
 int main()
 {
 	table_data *tdata;
@@ -102,12 +136,17 @@ int main()
 	table_insert(tdata, 4, 2);
 	table_show(tdata);
 
-#if 0
 	table_amend(tdata, 1, 7);
+	table_show(tdata);
 
 	table_delet(tdata, 5);
+	table_delet(tdata, 4);
+	table_show(tdata);
 	table_delet(tdata, 0);
+	table_delet(tdata, 0);
+	table_show(tdata);
 
+#if 0
 	unsigned int loc = table_select(tdata, 7);
 	printf("loc is %d\n", loc);
 
