@@ -14,7 +14,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef char hftype;
+
 typedef struct {
+	hftype value;
 	int weight;
 	int parent, rchild, lchild;
 }hftree;
@@ -44,15 +47,13 @@ static void hfman_select(hftree *ht, int end, int *s1, int *s2)
 	}
 
 	for (++i; i <= end; i++) {
-		if (ht[i].parent != -1) {
-			i++;
-			continue;
-		}
-		if (ht[i].weight < ht[*s1].weight) {
-			*s2 = *s1;
-			*s1 = i;
-		} else if (ht[i].weight >= ht[*s1].weight && ht[i].weight < ht[*s2].weight) {
-			*s2 = i;
+		if (ht[i].parent == -1) {
+			if (ht[i].weight < ht[*s1].weight) {
+				*s2 = *s1;
+				*s1 = i;
+			} else if (ht[i].weight >= ht[*s1].weight && ht[i].weight < ht[*s2].weight) {
+				*s2 = i;
+			}
 		}
 	}
 }
@@ -109,12 +110,13 @@ static void hfman_code(hftree *ht, hfcode **hc, int s)
 			j = ht[c].parent;
 			if (ht[j].lchild == c) {
 				code[--start] = '0';
-			} else if (ht[c].rchild == c) {
+			} else if (ht[j].rchild == c) {
 				code[--start] = '1';
 			}
 			c = j;
 		}
 		(*hc)[i] = (hfcode )malloc((s-start) * sizeof(char));
+		printf("%s\n", &code[start]);
 		strncpy((*hc)[i], &code[start], s-start);
 	}
 
@@ -125,9 +127,17 @@ static void hfcode_print(hfcode *hc, int *w, int s)
 {
 	int i;
 	for (i = 0; i < s; i++) {
-		printf("%d: %s\n", w[i], hc[i]);
+		printf("%d: %s\n", w[i], hc[i+1]);
 	}
 
+}
+
+static void hftnode_setval(hftree *ht, int *w, int s)
+{
+	int i;
+	for (i = 1; i < s; i++) {
+		(ht + i)->value = w[i-1];
+	}
 }
 
 int main()
@@ -143,6 +153,8 @@ int main()
 	hfman_code(ht, &hc, s);
 
 	hfcode_print(hc, w, s);
+
+	hftnode_setval(ht, w, s);
 
 	return 0;
 }
