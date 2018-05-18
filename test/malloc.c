@@ -17,9 +17,9 @@
 int main()
 {
 	int i;
-	char *p = (char *)malloc(sizeof(char) * 10);
+	char *p = (char *)malloc(sizeof(char) * 100);
 
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < 100; i++) {
 		printf("p[%d] = %p\n", i, p + i);
 	}
 
@@ -30,12 +30,22 @@ int main()
 		printf("%c %p\n", *(p+i), p + i);
 	}
 
-	/*********栈**************/
+	/***********************栈*************************/
 	char q[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	for (i = 0; i < 10; i++) {
 		printf("%d %p\n", q[i], &q[i]);
 		printf("%c %p\n", q[i], &q[i]);
 	}
+
+	/******%c  %d  %x ASCII码的方式存储是什么意思************/
+	char a = 0x8;
+	printf("a = 0x%x\n", a);
+
+	char b = 16;
+	printf("b = %x\n", b);
+
+	char c = 97;
+	printf("c = %c\n", c);
 
 	return 0;
 }

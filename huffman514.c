@@ -78,7 +78,7 @@ static void creat_huffman(hftree **hft, int *w, int s)
 			}
 		}
 		//set huffman
-		printf("s1: %d, s2:%d\n", s1, s2);
+		printf("j=%d, s1: %d, s2:%d\n", j, s1, s2);
 		(*hft)[j].weight = (*hft)[s1].weight + (*hft)[s2].weight;
 		(*hft)[s1].parent = (*hft)[s2].parent = j;
 		(*hft)[j].lchild = s1;
@@ -108,6 +108,7 @@ static void huffman_code(hfcode **hcd, hftree *hft, int s)
 		start = s - 1;// '\0'
 		while (hft[c].parent != -1) {
 			j = hft[c].parent;
+			printf("le le ha %d, j = %d\n", start, j); 
 			if (hft[j].lchild == c) {
 				code[--start] = '0';	
 			} else if (hft[j].rchild == c) {
