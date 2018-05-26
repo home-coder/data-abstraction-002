@@ -84,6 +84,7 @@ static void hfmtree_creat(hfmtree **phfmt, int *w, int s)
 static void hfmcode_creat(hfmcode **phfmc, hfmtree *hfmt, int s)
 {
 	int i, start;
+	hfmtree *phfmt = NULL;
 
 	*phfmc = (hfmcode *)malloc(s * sizeof(**phfmc));
 	if (!*phfmc) {
@@ -100,17 +101,15 @@ static void hfmcode_creat(hfmcode **phfmc, hfmtree *hfmt, int s)
 
 	for (i = 1; i <= s; i++) {
 		start = s - 1;
-		while (hfmt[i].parent) {
-			if (hfmt[i].parent->lchild == &hfmt[i]) {
+		phfmt = &hfmt[i];
+		while (phfmt->parent) {
+			if (phfmt->parent->lchild == phfmt) {
 				code[--start] = '0';
-			} else if (hfmt[i].parent->rchild == &hfmt[i]) {
+			} else if (phfmt->parent->rchild == phfmt) {
 				code[--start] = '1';
-			} else {
-				printf("hehe: %d, %d\n", hfmt[i].weight, hfmt[i].parent->lchild->weight);
 			}
-			hfmt[i] = *(hfmt[i].parent);
+			phfmt = phfmt->parent;;
 		}
-		printf("%s\n", &code[start]);
 		(*phfmc)[i] = (hfmcode )malloc((s - start + 1) * sizeof(***phfmc));
 		strncpy((*phfmc)[i], &code[start], s - start + 1);
 	}
