@@ -63,6 +63,7 @@ static void huffman_creat(hftree **hft, int *w, int s)
 		++i;
 		for (; i <= j - 1; i++) {
 			if ((*hft)[i].parent == NULL) {
+				printf("%d ", i);
 				if ((*hft)[i].weight < (*hft)[s1].weight) {
 					s2 = s1;
 					s1 = i;
