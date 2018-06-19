@@ -79,27 +79,37 @@ static void hft_creat(hfmtree **phft, int *w, int s)
 	}
 }
 
-static void hft_code(hfcode **hfcode, hfmtree *hft, int s)
+static void hft_code(hfmcode **hfc, hfmtree *hft, int s)
 {
-	*hfcode = (hfcode *)malloc(sizeof(**hfcode) * s);
-	if (!*hfcode) {
-		printf("*hfcode malloc failed\n");
-		return ;
-	}
+	int i, j;
+	hfmtree *phft = NULL;
 
-	hfcode code = (hfcode)malloc(sizeof(*code) * s);
-	if (!code) {
-		printf("code malloc failed\n");
-		goto fail_1;
-	}
-	code[s - 1] = '\0';
+	*hfc = (hfmcode *)malloc(sizeof(**hfc) * s);
 
 	for (i = 1; i <= s; i++) {
-		//我要靠自己的脑子去实现，一点记忆也不要留，完全重新思考，先放到这里，端午回来	
+		(*hfc)[i] = (hfmcode )malloc(sizeof(***hfc) * (s - 1));
+		(*hfc)[i][s - 2] = '\0';
+		j = s - 3;
+		phft = &hft[i];
+		while (phft->parent) {
+			if (phft->parent->lchild == phft) {
+				(*hfc)[i][j--] = '0';
+			} else if (phft->parent->rchild == phft) {
+				(*hfc)[i][j--] = '1';
+			}
+			phft = phft->parent;
+		}
+		(*hfc)[i] = (*hfc)[i] + j + 1;
 	}
+}
 
-fail_1:
-	free(*hfcode);
+static void hftcode_print(hfmcode *hfc, int *w, int s)
+{
+	int i;
+
+	for (i = 1; i <= s; i++) {
+		printf("%d: %s\n", w[i - 1], hfc[i]);
+	}
 }
 
 int main()
@@ -111,8 +121,10 @@ int main()
 	hfmtree *hft = NULL;
 	hft_creat(&hft, w, s);
 
-	hfmcode *hfcode;
-	hft_code(&hfcode, hft, s);
+	hfmcode *hfc;
+	hft_code(&hfc, hft, s);
+
+	hftcode_print(hfc, w, s);
 
 	return 0;
 }
